@@ -2,9 +2,19 @@ const GOOGLE_MAP_API_KEY = "AIzaSyAPo7XvP2AAvQOk5i6WiJYW0htAG408Wxg";
 const GOOGLE_MAP_URL = ""
 
 
+function initWelcomeLightBox() {
+	//Lightbox to welcome user and explain what this app does
+}
+
 function initMap() {
 	//this function should initialize Google Maps and fill the "div.js-map-container" or "#map"DOM object with it
 	//start location: lat 40.650002 long -73.949997
+
+	let map = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: 40.650002, lng: -73.949997},
+		zoom: 13,
+		mapTypeId: 'roadmap'
+	});
 }
 
 function getLocationByLatLong() {
@@ -39,7 +49,7 @@ function requestNYC311Data() {
 }
 
 function create311ComplaintChart() {
-	//create chart using 311 data that visualizes the most common complaints for various agencies (NYPD, Sanitation, etc.)
+	//create chart (with Google D3 API) using 311 data that visualizes the most common complaints for various agencies (NYPD, Sanitation, etc.)
 }
 
 function renderNeighborhoodDataSideBar() {
@@ -51,7 +61,7 @@ function renderNeighborhoodDataSideBar() {
 
 
 
-
+initMap();
 
 
 
