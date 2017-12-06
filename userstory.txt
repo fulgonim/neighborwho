@@ -1,0 +1,84 @@
+
+NeighborWho? 
+
+User Story and Description
+
+1. Upon landing, users should be prompted by a lightbox with the following text:
+	"New Yorkers!
+	Have you ever wanted to know what your neighbors are up to or what your future neighbors might be like?
+	Here's your chance!
+	Type an address or click a location to learn more about what's going on in the surrounding area!
+
+	(Button) Let's Go!"
+
+2. User should be able to navigate around a map of New York with a search bar at the top
+
+3. When user clicks on the map (or types an address into the search bar and hits enter or a button that says: "learn about this location") they should see a marker appear and a side bar appear on the right hand side of the viewport with statistics about the neighborhood: 311 Statistics (to be added: crime statistics, traffic accidents, DOB violations)
+
+4. User should be able to still navigate around the map and pick a new location by clicking or entering a new location, the side bar should reload with data about the new chosen location
+
+5. User should be able to click on an information icon to see the start directions lightbox again
+
+
+
+
+FUNCTION STUBS
+
+1. 
+	a. Function to open lightbox with intro text and "let's go" button
+	b. Function to load Google Map (of New York) with search bar at top in background
+
+2/3. 
+	a. Function to listen for click on the map
+	b. Function to listen for form submission on search bar
+		(function to help autocomplete?)
+	c. Function to create marker for clicked or submitted location on map
+	d. Function to take form input and create lat and long coordinates using Google Maps Geocoding API
+		 -Function to take clicked location and use Google Maps Geocoding API to reverse Geocode to address to display on stats side bar (but maintain lat and long as inputs for API call to NYC Open Data 311 API)
+	e. Function for API call to NYC Open Data 311 API to GET information about the neighborhood
+		 -Specify data to be returned - based on lat and long inputs from input
+		 -lat and long of any data points returned should be within certain bounds 
+		 (conversion for lat/long to km = 10,000km/90 degrees or for .5km it is .0045 degrees)
+	f. Function(s) to analyze data received
+
+
+
+
+
+NYC OPEN DATA API for 311 Information:
+
+App Token: 
+cWH2iJxbfljPUicrdhnNB7Znk
+
+Secret Token: 
+qdLc7ATCQe_VeoZ0omeXvnGN6pfXK5xF-IDu
+
+EndPoint:
+https://data.cityofnewyork.us/resource/fhrw-4uyv.json
+
+
+
+
+
+GOOGLE MAPS JAVASCRIPT API
+
+Key: AIzaSyAPo7XvP2AAvQOk5i6WiJYW0htAG408Wxg
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
