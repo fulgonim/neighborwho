@@ -61,7 +61,6 @@ function renderNeighborhoodDataSideBar() {
 
 
 
-initMap();
 
 
 
