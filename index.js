@@ -9,12 +9,23 @@ function initWelcomeLightBox() {
 function initMap() {
 	//this function should initialize Google Maps and fill the "div.js-map-container" or "#map"DOM object with it
 	//start location: lat 40.650002 long -73.949997
-
-	let map = new google.maps.Map(document.getElementById('map'), {
+	//include search bar
+	/*let bounds = new google.maps.LatLngBounds();*/
+	let mapOptions = {
 		center: {lat: 40.650002, lng: -73.949997},
 		zoom: 13,
 		mapTypeId: 'roadmap'
-	});
+	}
+	let map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+	var input = document.getElementById('search-input');
+        let searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        // Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function() {
+          searchBox.setBounds(map.getBounds());
+        });
 }
 
 function getLocationByLatLong() {
