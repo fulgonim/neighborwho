@@ -5,7 +5,8 @@
 	<title>NeighborWho? Information Service</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css"> 
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css"> -->
 	<link rel="stylesheet" type="text/css" href="index.css">
 </head>
 
@@ -15,9 +16,9 @@
 	</header>
 
 	<main role="main">
-		<form>
-			<input id="search-input" class="controls" type="text" placeholder="Search Box">
-			<button>Find Address</button>
+		<form class="js-search-input">
+			<input id="search-input" type="text" placeholder="Search Box">
+			<button class="submit" type="submit">Find Address</button>
 		</form>
 		<div id="map" class="js-map-container">
 			
