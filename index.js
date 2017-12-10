@@ -7,16 +7,15 @@ function initWelcomeLightBox() {
 	//Lightbox to welcome user and explain what this app does
 }
 
-
-
-
-
+let map;
 
 function initMap() {
 	//this function should initialize Google Maps and fill the "div.js-map-container" or "#map"DOM object with it
 	//start location: lat 40.650002 long -73.949997
 	//include search bar
 	//let bounds = new google.maps.LatLngBounds();
+
+	// temporary starting coordinates for marker
 	let brooklynStart = {
 		lat: 40.650002, lng: -73.949997
 	}
@@ -27,20 +26,7 @@ function initMap() {
 		mapTypeId: 'roadmap'
 	}
 	// New Map
-	let map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-	// New event listener for a click on the map
-	google.maps.event.addListener(map, 'click', function(event) {
-
-		// create new marker
-		let latLng = event.latLng;
-		console.log(latLng);
-		addMarker(latLng, map);
-		//requestLocationDataWithLatLng(latLng);
-
-	})
-
-
+	map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
 	// new googe maps autocomplete-enabled search bar
 	let input = document.getElementById('search-input');
@@ -50,93 +36,88 @@ function initMap() {
         map.addListener('bounds_changed', function() {
           searchBox.setBounds(map.getBounds());
         });
-   
+    
+    	addMarkerWithLocationData(brooklynStart, map);
+    
+}
 
-    let currentLocationData ;
 
-    // Add Marker function that displays location data
-    function addMarkerWithLocationData(coords, map, locationData) {
+let currentAddressInfo;
+
+
+// make sure to re-configure this function
+function addMarkerWithLocationData(coords, map) {
+    	console.log("this is the location data stored in the variable currentAddressInfo");
     	console.log(coords);
+
     	let marker = new google.maps.Marker({
 			position: coords,
 			map: map
 		});
-
-
-    	//let locationData1 = currentLocationData.results[0];
-    	// add infoWindow that features a submit button to initiate the 311 call
+    	
 		let infoWindow = new google.maps.InfoWindow({
-			content: `<h1>${locationData.formatted_address}</h1>
-					<form class="js-map-popout-form">
-						<button class="js-map-find-out-more" type="submit">Find Out More</button>
-					</form>
-			`
+		content: `<h1>MY MARKER</h1>
+				<form class="js-map-popout-form">
+					<button class="js-map-find-out-more" type="submit">Find Out More</button>
+				</form>
+		`
 		});
 
 		marker.addListener('click', function() {
 			infoWindow.open(map, marker);
 		})
-    }
+}
 
-    function requestLocationDataWithAddress(getAddress) {
-	//use URL GOOGLE_GEOCODE_API_URL w/ GOOGLE_MAP_API_KEY to get google maps geocode API location data
+// listen for search input and retrieve location data
+function listenForSearchInputThenRunFunctions() {
+	$('.js-search-input').on('submit', event => {
+		event.preventDefault();
+
+		let currentAddress = $('.search-input').val();
+		console.log("this is the current address being searched:");
+		console.log(currentAddress);
+
+		requestLocationDataWithAddress(currentAddress);
+
+		
+	})
+}
+
+
+// request location data using input address then create a new marker
+function requestLocationDataWithAddress(getAddress) {
+//use URL GOOGLE_GEOCODE_API_URL w/ GOOGLE_MAP_API_KEY to get google maps geocode API location data
 
 	let query = {"address": getAddress, key: "AIzaSyAPo7XvP2AAvQOk5i6WiJYW0htAG408Wxg"};
 
 	$.getJSON(GOOGLE_GEOCODE_API_URL, query, function(data) {
-		console.log(data +"this is the address API call");
+		console.log(`this is the data returned from google maps API places library about: ${getAddress}`)
+		console.log(data);
+		
+		currentAddressInfo = data;
+		console.log('this is the data once it\'s passed into a new global variable called currentAddressInfo');
+		console.log(currentAddressInfo);
 
-		currentLocationData = data;
-		console.log(currentLocationData);
+		//create new marker with location info
+		addMarkerWithLocationData(currentAddressInfo.results[0].geometry.location, map);
 
 	});
 
-	console.log(currentLocationData);
-
-	}
-
-	function requestLocationDataWithLatLng(getLtLng) {
-		let query = {"latlng": [getLtLng.lat, getLtLng.lng], key: "AIzaSyAPo7XvP2AAvQOk5i6WiJYW0htAG408Wxg"};
-
-		$.getJSON(GOOGLE_GEOCODE_API_URL, query, function(data) {
-			console.log(data);
-		})
-	}
-
-	function getLocationByAddress() {
-		//Listen for form submit from search bar, return address
-
-		$('.js-search-input').on('submit', event => {
-			event.preventDefault();
-			
-			let address = $('#search-input').val();
-			
-			requestLocationDataWithAddress(address);
-
-			console.log(currentLocationData['geometry']);
-
-			addMarkerWithLocationData(currentLocationData.location, map, currentLocationData);
-
-			
-		});
-	}
-
-	getLocationByAddress();
-
-
-
-
-
 }
 
-function listenAndInit311Call() {
-	$('.js-map-find-out-more').on('sumbit', event => {
+// Listen for submit on "find out more" button
+function findOutMore() {
+	$('.js-map-find-out-more').on('submit', event => {
 		event.preventDefault();
 
 
-
-	});
+	})
 }
+
+function Nyc311Call() {
+	
+}
+
 
 
 function requestNYC311Data() {
@@ -160,17 +141,13 @@ function renderNeighborhoodDataSideBar() {
 }
 
 
-function main() {
-	//getLocationByAddress();
 
+
+function main() {
+	listenForSearchInputThenRunFunctions();
 }
 
-
-
-//$(main());
-
-
-
+main();
 
 
 
