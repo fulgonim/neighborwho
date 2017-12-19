@@ -39,12 +39,14 @@ function initMap() {
           searchBox.setBounds(map.getBounds());
         });
     
-    	addMarkerWithLocationData(brooklynStart, map);
+    	
     
 }
 
 
 let currentAddressInfo;
+
+let marker;
 
 
 // make sure to re-configure this function
@@ -52,10 +54,16 @@ function addMarkerWithLocationData(coords, map, locationData) {
     	console.log("this is the location data stored in the variable currentAddressInfo");
     	console.log(coords);
 
-    	let marker = new google.maps.Marker({
+    	if (marker) {
+    		marker.setMap(null);
+    	}
+
+    	marker = new google.maps.Marker({
 			position: coords,
 			map: map
 		});
+
+
     	
 		let infoWindow = new google.maps.InfoWindow({
 		content: `<h1>MY MARKER</h1>
@@ -109,6 +117,8 @@ function requestLocationDataWithAddress(getAddress) {
 
 }
 
+let current311Data = [];
+
 function nyc311Call(event) {
 
 	event.preventDefault();
@@ -123,7 +133,7 @@ function nyc311Call(event) {
 	console.log("Here is the current date's month");
 	console.log(currentDate.getMonth());
 
-	subtract2Months.setMonth(currentDate.getMonth() - 10);
+	subtract2Months.setMonth(currentDate.getMonth() - 2);
 	console.log("Here is the current date's month minus 2");
 	console.log(subtract2Months.getMonth());
 
@@ -145,34 +155,14 @@ function nyc311Call(event) {
 	console.log(whenString);
 
 
-	//the following code sets the lat long parameters
+	//Zipcode query input
 
-	//LATITUDE
+	let currentZip = currentAddressInfo.results[0].address_components[7].long_name;
+	console.log("the current zip is:");
+	console.log(currentZip);
 
-	let latLngBoundDistance = 0.00449135414327;
-
-	let currentLat = currentAddressInfo.results[0].geometry.location.lat;
-	let currentLng = currentAddressInfo.results[0].geometry.location.lng;
-	console.log("here's the current location lat:");
-	console.log(currentLat);
-
-
-	let northLatBound = currentLat + latLngBoundDistance;
-	let southLatBound = currentLat - latLngBoundDistance;
-
-	let whereLatString = "latitude between '"+northLatBound+"' and '"+southLatBound+"'";
-
-	//LONGITUDE
-
-	console.log("here's the current location long:");
-	console.log(currentLng);
-
-	let westLngBound = currentLng - latLngBoundDistance;
-	let eastLngBound = currentLng + latLngBoundDistance;
-
+	let zipString = "incident_zip='"+currentZip+"'";
 	
-
-	let whereLngString = "longitude between '"+westLngBound+"' and '"+eastLngBound+"'";
 
 
 	//what the URL should look like: https://data.cityofnewyork.us/resource/fhrw-4uyv.json?$where=created_date%20between%20%272017-07-16%27%20and%20%272017-12-17%27
@@ -180,13 +170,21 @@ function nyc311Call(event) {
 		url: NYC_311_API_ENDPOINT_URL,
 		data: {
 			"$$app_token": APP_TOKEN,
-			$query: `WHERE ${whenString} AND ${whereLatString} AND ${whereLngString}`
-			//created_date: refDate
+			$query: `SELECT * WHERE ${whenString} AND ${zipString} AND agency='NYPD'`
+			
 		},
+
+
+		//agency, complaint_type, descriptor
+
 		type: "GET",
 		success: function(data) {
 			console.log("here's the 311 data!")
 			console.log(data);
+			current311Data = data;
+			showComplaintTypes(data);
+
+
 		}
 
 	};
@@ -196,16 +194,30 @@ function nyc311Call(event) {
 }
 
 
+function showComplaintTypes(data) {
+	console.log(data[0].complaint_type);
+	let complaints = {};
 
-function requestNYC311Data() {
-	//send AJAX request using lat and long coordinates to NYC 311 API 
-	//Specify data to be returned - based on lat and long inputs from input
-		 //lat and long of any data points returned should be within .5km East, West, North and South of the chosen location
-		 //(conversion for lat/long to km multiply degrees by 111.325 or for .5km it is .00449135414327 degrees)
 
-	//Data should be from up to 1 year ago
+
+	for (let i = 0; i < data.length; i++) {
+		if (complaints[data[i].complaint_type] === data[i].complaint_type) {
+			complaints[data[i].complaint_type] += 1 ;
+		}
+
+		else {
+			
+			complaints[data[i].complaint_type] = 1;
+			complaints[data[i].complaint_type];
+		}
+	}
+
+
+	console.log("complaint object");
+	console.log(complaints);
 
 }
+
 
 function create311ComplaintChart() {
 	//create chart (with Google D3 API) using 311 data that visualizes the most common complaints for various agencies (NYPD, Sanitation, etc.)
@@ -227,6 +239,38 @@ function main() {
 
 $(main);
 
+/*
+
+//the following code sets the lat long parameters
+
+	//LATITUDE
+
+	let latLngBoundDistance = 0.004491;
+
+	//35414327
+
+	let currentLat = currentAddressInfo.results[0].geometry.location.lat;
+	let currentLng = currentAddressInfo.results[0].geometry.location.lng;
+	console.log("here's the current location lat:");
+	console.log(currentLat);
 
 
+	let northLatBound = currentLat + latLngBoundDistance;
+	let southLatBound = currentLat - latLngBoundDistance;
+
+	let whereLatString = "(latitude between '"+northLatBound+"' and '"+southLatBound+"')";
+
+	//LONGITUDE
+
+	console.log("here's the current location lng:");
+	console.log(currentLng);
+
+	let westLngBound = currentLng - latLngBoundDistance;
+	let eastLngBound = currentLng + latLngBoundDistance;
+
+	
+
+	let whereLngString = "(longitude between '"+westLngBound+"' and '"+eastLngBound+"')";
+
+*/
 
