@@ -1,8 +1,8 @@
-#map {
-	height: 100%;
+* {
+	box-sizing: border-box;
 }
 
-html, body, main {
+html, body, css-main {
 	height: 100%;
 	width: 100%;
 	margin: 0;
@@ -10,7 +10,48 @@ html, body, main {
 	box-sizing: border-box;
 }
 
+.search-row {
+	margin-bottom: 20px;
+}
+
+.map-stat-row {
+	height: 100%;
+}
+
+#map {
+	height: 800px;
+}
+
+
+
+h1, form {
+	display: block;
+	margin-left: auto;
+	text-align: center;
+}
+
 h1 {
-	position: relative;
+	font-family: "Bungee", sans-serif;
+}
+
+form input, form button, h2, p {
+	font-family: "Quicksand", sans-serif;
+}
+
+.css-complaint-button {
+	font-family: "Quicksand", sans-serif;
+	display: block;
+	margin: 3px;
+}
+
+/*h1, .css-search-bar {
+	margin-left: auto;
+	text-align: center;
+	display: block;
+}*/
+
+.css-search-bar {
+	margin-left: auto;
+
 }
 

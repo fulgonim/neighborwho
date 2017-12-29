@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-	<title>NeighborWho? Information Service</title>
+	<title>NeighborWho Information Service</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css"> -->
 	<link rel="stylesheet" type="text/css" href="index.css">
+	<link href="https://fonts.googleapis.com/css?family=Bungee|Montserrat|Poppins|Quicksand" rel="stylesheet">
 </head>
 
 <body>
@@ -15,19 +16,36 @@
 		<h1>NeighborWho</h1>
 	</header>
 
-	<main role="main">
-		<form class="js-search-input">
-			<input class="search-input" id="search-input" type="text" placeholder="Search Box">
-			<button class="submit" type="submit">Find Address</button>
-		</form>
-		<div id="map" class="js-map-container">
-			
+	
+
+
+	<!-- <main role="main" > -->
+	<div class="container-fluid css-main">
+		<div class="row justify-content-md-center search-row">
+			<form class="col js-search-input css-search-bar">
+				<input class="search-input" id="search-input" type="text" placeholder="Enter A NYC Address...">
+				<button class="submit" type="submit">Find Address</button>
+			</form>
 		</div>
-		<div class="js-stat-side-bar">
-			
-		</div>
-		
-	</main>
+			<div class="row map-stat-row">
+				<div id="map" class="js-map-container col-sm-9">
+					
+				</div>
+				<div class="js-stat-side-bar col-sm-3" id="js-stat-side-bar">
+					<h2><b>Hey New Yorkers!</b></h2>
+					<p>Have you ever wondered what people in your neighborhood are complaining about?</p>
+					<p>Perhaps you want to move to a new spot but you're not sure what your neighbors will be like</p>
+					<p>Perhaps you want to see if your new neighbors are okay with 3am ragers</p>
+					<p>Perhaps you're just nosey</p>
+					<p>Whatever the reason, <b>NeighborWho</b> can help!</p>
+					<p>To get started, enter a valid New York City address in the search bar above and hit "find address"</p>
+					<p>Then just follow the buttons as you see them!</p>
+					<p>Have fun!</p>
+					
+				</div>
+			</div>
+	</div>
+	<!-- </main> -->
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPo7XvP2AAvQOk5i6WiJYW0htAG408Wxg&libraries=places&callback=initMap"

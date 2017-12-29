@@ -63,15 +63,17 @@ function addMarkerWithLocationData(coords, map, locationData) {
 			map: map
 		});
 
-
+    	let addressName = locationData.results[0].formatted_address;
     	
 		let infoWindow = new google.maps.InfoWindow({
-		content: `<h1>MY MARKER</h1>
-				<form class="js-map-popout-form">
-					<button onclick="nyc311Call(event)" class="js-map-find-out-more" type="submit">Find Out More</button>
+		content: `<h2>${addressName}</h2>
+				<form class="js-map-popout-form" id="js-map-popout-form">
+					<button onclick="nyc311Call(event)" class="js-map-find-out-more" type="submit">Find Out What People are Complaining About</button>
 				</form>
 		`
 		});
+
+		infoWindow.open(map, marker);
 
 		marker.addListener('click', function() {
 			infoWindow.open(map, marker);
@@ -174,18 +176,14 @@ function nyc311Call(event) {
 			
 		},
 
-
-		//agency, complaint_type, descriptor
-
 		type: "GET",
 		success: function(data) {
 			console.log("here's the 311 data!")
 			console.log(data);
 			current311Data = data;
-			showComplaintTypes(data);
-
-
-		}
+			renderComplaintTypes(showComplaintTypes(data));
+			complaintButtonClick();
+		},
 
 	};
 
@@ -195,46 +193,151 @@ function nyc311Call(event) {
 
 
 function showComplaintTypes(data) {
-	console.log(data[0].complaint_type);
+
 	let complaints = {};
 
-
-
 	for (let i = 0; i < data.length; i++) {
-		if (complaints[data[i].complaint_type] === data[i].complaint_type) {
-			complaints[data[i].complaint_type] += 1 ;
-		}
 
-		else {
-			
-			complaints[data[i].complaint_type] = 1;
-			complaints[data[i].complaint_type];
+		let complaintType = data[i].complaint_type;
+
+		if (complaints[complaintType]) {
+			complaints[complaintType]++;
+		} else {
+			complaints[complaintType] = 1;
 		}
 	}
 
-
 	console.log("complaint object");
 	console.log(complaints);
+	return complaints;
 
 }
 
 
-function create311ComplaintChart() {
-	//create chart (with Google D3 API) using 311 data that visualizes the most common complaints for various agencies (NYPD, Sanitation, etc.)
+// loop through the complaints object and create buttons for each to display in the infowindow
+function renderComplaintTypes(complaints, data) {
+
+	let statSideBar = document.getElementById('js-stat-side-bar');
+
+	// empty the statSideBar element before dynamically adding new complaint buttons
+	$(statSideBar).empty();
+
+	for (let complaint in complaints) {
+
+		//create a button (OR ANCHOR ELEMENT?) 
+		let complaintButton = document.createElement(`
+			<
+
+
+			`
+
+
+			);
+		
+
+
+
+		// complaintButton.setAttribute('class', 'js-complaint-button css-complaint-button');
+		// complaintButton.setAttribute('value', complaint);
+
+		// complaintButton.innerHTML = `${complaint}: ${complaints[complaint]}`;
+
+		//statSideBar.append(complaintButton); 
+		
+
+		console.log(`obj.${complaint} = ${complaints[complaint]}`);	
+	}
 }
 
-function renderNeighborhoodDataSideBar() {
-	//create DOM element (sidebar) that includes:
-	//Address, 311 complaint chart
+function complaintButtonClick() {
 
+	let clicks = 0;
+
+	$('.js-complaint-button').on('click', event => {
+		event.preventDefault();
+		console.log("Complaint Button has been clicked!");
+
+		let currentButton = $(event.currentTarget);
+
+		// if (clicks === 0) {
+		// 	$(event.currentTarget).append(getComplaintDescriptions(current311Data, $(event.currentTarget).val()));
+		// 	let complaintChildren = $(event.currentTarget).children();
+		// 	console.log("Here are the complaint children elements:");
+		// 	console.log(complaintChildren);
+
+		// } else if (clicks === 1) {
+		// 	$(event.currentTarget).remove();
+
+		// 	 }
+
+		// } else if (clicks % 2 = 0) {
+		// 	$(event.currentTarget).append(getComplaintDescriptions(current311Data, $(event.currentTarget).val()));
+
+		// } else {
+		// 	$(event.currentTarget).empty();
+		// }
+
+		clicks++;
+
+		//getComplaintDescriptions(current311Data, $(event.currentTarget).val());
+
+	});
 }
+
+function getComplaintDescriptions(current311Data, complaint) {
+
+	let complaintDescriptionArray = [];
+
+
+
+	for (let i = 0; i < current311Data.length; i++) {
+		if (current311Data[i].complaint_type === complaint) {
+			complaintDescriptionArray.push(current311Data[i].descriptor);
+			let complaintDescriptionList = document.createElement("p");
+			complaintDescriptionList.setAttribute('class', 'js-description-item css-description-item');
+			complaintDescriptionList.setAttribute('value', complaintDescriptionArray[i]);
+
+			complaintDescriptionList.innerHTML = `${complaintDescriptionArray[i]}   `;
+
+		}
+	}
+
+	console.log(complaintDescriptionArray);
+	return complaintDescriptionArray;
+
+}	
+
+//function renderComplaintDescriptions(complaintDescriptionArray)
+
+
+
+// function renderComplaintDescriptions(descriptions) {
+
+// 	let descriptionsArray = descriptions;
+
+// 	for (let i = 0; i < descriptionsArray.length; i++) {
+
+// 		let descriptionItem = ;
+// 	}
+
+// }
+
+
+// function create311ComplaintChart() {
+// 	//create chart (with Google D3 API) using 311 data that visualizes the most common complaints for various agencies (NYPD, Sanitation, etc.)
+// }
+
+// function renderNeighborhoodDataSideBar() {
+// 	//create DOM element (sidebar) that includes:
+// 	//Address, 311 complaint chart
+
+// }
 
 
 
 
 function main() {
 	listenForSearchInputThenRunFunctions();
-	//findOutMore();
 }
 
 $(main);
