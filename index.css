@@ -23,7 +23,7 @@ html, body, css-main {
 }
 
 /*
-Mobile-First Classes
+Mobile-First Class
 */
 
 @media (max-width: 576px) {
@@ -60,12 +60,6 @@ h2 {
 	display: block;
 	margin: 3px;
 }
-
-/*h1, .css-search-bar {
-	margin-left: auto;
-	text-align: center;
-	display: block;
-}*/
 
 .css-search-bar {
 	margin-left: auto;
