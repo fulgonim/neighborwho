@@ -19,10 +19,19 @@ html, body, css-main {
 }
 
 #map {
-	height: 800px;
+	height: auto;
 }
 
+/*
+Mobile-First Classes
+*/
 
+@media (max-width: 576px) {
+	#map {
+		width: 100%;
+		height: 300px;
+	}
+}
 
 h1, form {
 	display: block;
@@ -34,8 +43,16 @@ h1 {
 	font-family: "Bungee", sans-serif;
 }
 
-form input, form button, h2, p {
+form input, form button, h2, p, li {
 	font-family: "Quicksand", sans-serif;
+}
+
+p, li {
+	font-size: .8em;
+}
+
+h2 {
+	font-size: 1.5em;
 }
 
 .css-complaint-button {
@@ -54,4 +71,11 @@ form input, form button, h2, p {
 	margin-left: auto;
 
 }
+
+
+.hidden {
+	display: none;
+}
+
+
 

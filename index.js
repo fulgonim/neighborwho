@@ -4,13 +4,9 @@ const NYC_311_API_ENDPOINT_URL = "https://data.cityofnewyork.us/resource/fhrw-4u
 const APP_TOKEN = "cWH2iJxbfljPUicrdhnNB7Znk";
 const SECRET_APP_TOKEN = "qdLc7ATCQe_VeoZ0omeXvnGN6pfXK5xF-IDu"
 
-
-function initWelcomeLightBox() {
-	//Lightbox to welcome user and explain what this app does
-}
-
 let map;
 
+//initialize google map centered on North Brooklyn
 function initMap() {
 	//this function should initialize Google Maps and fill the "div.js-map-container" or "#map"DOM object with it
 	//start location: lat 40.650002 long -73.949997
@@ -48,12 +44,12 @@ let currentAddressInfo;
 
 let marker;
 
-
-// make sure to re-configure this function
+//use location data from Google to create a new location marker with button to find out more about the complaint data in that area
 function addMarkerWithLocationData(coords, map, locationData) {
     	console.log("this is the location data stored in the variable currentAddressInfo");
     	console.log(coords);
 
+    	//remove any markers already present on the map
     	if (marker) {
     		marker.setMap(null);
     	}
@@ -98,7 +94,7 @@ function listenForSearchInputThenRunFunctions() {
 }
 
 
-// request location data using input address then create a new marker
+// request location data using input address then create a new marker 
 function requestLocationDataWithAddress(getAddress) {
 //use URL GOOGLE_GEOCODE_API_URL w/ GOOGLE_MAP_API_KEY to get google maps geocode API location data
 
@@ -146,8 +142,6 @@ function nyc311Call(event) {
 	console.log("Today's date:")
 	console.log(newDate);
 
-	//let refDate = newDate.setMonth(newDate.getMonth() - 2);
-
 	console.log("Reference Date:")
 	console.log(refDate);
 	//console.log(refDate);
@@ -155,7 +149,6 @@ function nyc311Call(event) {
 	let whenString = "created_date between '"+refDate+"' and '"+newDate+"'";
 	console.log("decoded string:");
 	console.log(whenString);
-
 
 	//Zipcode query input
 
@@ -165,9 +158,9 @@ function nyc311Call(event) {
 
 	let zipString = "incident_zip='"+currentZip+"'";
 	
-
-
 	//what the URL should look like: https://data.cityofnewyork.us/resource/fhrw-4uyv.json?$where=created_date%20between%20%272017-07-16%27%20and%20%272017-12-17%27
+	//AJAX call to NYC 311 database to return 311 complaint data
+	//success call runs all additional functions needed to store and display correct data
 	const settings = {
 		url: NYC_311_API_ENDPOINT_URL,
 		data: {
@@ -181,8 +174,8 @@ function nyc311Call(event) {
 			console.log("here's the 311 data!")
 			console.log(data);
 			current311Data = data;
-			renderComplaintTypes(showComplaintTypes(data));
-			complaintButtonClick();
+			renderComplaintTypes(getComplaintTypes(data), data);
+			toggleDescriptions();
 		},
 
 	};
@@ -191,8 +184,8 @@ function nyc311Call(event) {
 
 }
 
-
-function showComplaintTypes(data) {
+//loop through the 311 data and pull out all the complaint types and determine how many of each type there are present
+function getComplaintTypes(data) {
 
 	let complaints = {};
 
@@ -213,8 +206,24 @@ function showComplaintTypes(data) {
 
 }
 
+//get the specific complaint descriptions using the complaint type
+function getComplaintDescriptions(current311Data, complaint) {
+
+	let complaintDescriptionArray = [];
+
+	for (let i = 0; i < current311Data.length; i++) {
+		if (current311Data[i].complaint_type === complaint) {
+			complaintDescriptionArray.push(current311Data[i].descriptor);
+		}
+	}
+
+	console.log(complaintDescriptionArray);
+	return complaintDescriptionArray;
+}	
+
 
 // loop through the complaints object and create buttons for each to display in the infowindow
+//each button will have hidden list items 
 function renderComplaintTypes(complaints, data) {
 
 	let statSideBar = document.getElementById('js-stat-side-bar');
@@ -222,119 +231,58 @@ function renderComplaintTypes(complaints, data) {
 	// empty the statSideBar element before dynamically adding new complaint buttons
 	$(statSideBar).empty();
 
+	//create a div to hold all the buttons and their associated lists
+	let complaintButtonContainer = document.createElement("div");
+	complaintButtonContainer.setAttribute("class", "js-complaints-descriptions css-complaints-descriptions");
+
+	//append this div to the stat side bar
+	statSideBar.append(complaintButtonContainer); 
+
+	// loop through complaint list, create buttons and get the associated descriptions and create a list element of them
+
+	let counter = 0;
+
 	for (let complaint in complaints) {
+		console.log("here are the complaints and their stats:");
+		console.log(`obj.${complaint} = ${complaints[complaint]}`);	
+
+		//get specific complaint descriptions and store in an array by calling the "getComplaintDescriptions" function
+		let descriptions = getComplaintDescriptions(data, complaint);
+		console.log("here are the descriptions:");
+		console.log(descriptions);
 
 		//create a button (OR ANCHOR ELEMENT?) 
-		let complaintButton = document.createElement(`
-			<
+		let complaintButton = document.createElement("button");
+		complaintButton.setAttribute("class", `js-complaint-button complaint-button-${counter} css-complaint-button`);
+		//complaintButton.setAttribute("onclick", "toggleDescriptions()");
+		complaintButton.setAttribute("value", complaint);
 
+		let complaintList = document.createElement("ul");
+		complaintList.setAttribute("class", `js-complaint-list complaint-list-${counter} css-complaint-list hidden`);
 
-			`
+		$('.js-complaints-descriptions').append(complaintButton);
+		$(`.complaint-button-${counter}`).text(`${complaint}: ${complaints[complaint]}`);
+		$('.js-complaints-descriptions').append(complaintList);
 
+		for (let i = 0; i < descriptions.length; i++) {
+			let descriptionItem = document.createElement("li");
+			descriptionItem.setAttribute("class", `js-description-item description-item-${descriptions[i]} css-description-item`);
+			$(`.complaint-list-${counter}`).append(descriptionItem);
+			$(descriptionItem).text(`${descriptions[i]}`);
 
-			);
-		
-
-
-
-		// complaintButton.setAttribute('class', 'js-complaint-button css-complaint-button');
-		// complaintButton.setAttribute('value', complaint);
-
-		// complaintButton.innerHTML = `${complaint}: ${complaints[complaint]}`;
-
-		//statSideBar.append(complaintButton); 
-		
-
-		console.log(`obj.${complaint} = ${complaints[complaint]}`);	
+		}
+		counter++;
 	}
 }
 
-function complaintButtonClick() {
-
-	let clicks = 0;
-
+function toggleDescriptions() {
+	
 	$('.js-complaint-button').on('click', event => {
 		event.preventDefault();
 		console.log("Complaint Button has been clicked!");
-
-		let currentButton = $(event.currentTarget);
-
-		// if (clicks === 0) {
-		// 	$(event.currentTarget).append(getComplaintDescriptions(current311Data, $(event.currentTarget).val()));
-		// 	let complaintChildren = $(event.currentTarget).children();
-		// 	console.log("Here are the complaint children elements:");
-		// 	console.log(complaintChildren);
-
-		// } else if (clicks === 1) {
-		// 	$(event.currentTarget).remove();
-
-		// 	 }
-
-		// } else if (clicks % 2 = 0) {
-		// 	$(event.currentTarget).append(getComplaintDescriptions(current311Data, $(event.currentTarget).val()));
-
-		// } else {
-		// 	$(event.currentTarget).empty();
-		// }
-
-		clicks++;
-
-		//getComplaintDescriptions(current311Data, $(event.currentTarget).val());
-
+		$(event.currentTarget).next('ul').toggleClass('hidden');
 	});
 }
-
-function getComplaintDescriptions(current311Data, complaint) {
-
-	let complaintDescriptionArray = [];
-
-
-
-	for (let i = 0; i < current311Data.length; i++) {
-		if (current311Data[i].complaint_type === complaint) {
-			complaintDescriptionArray.push(current311Data[i].descriptor);
-			let complaintDescriptionList = document.createElement("p");
-			complaintDescriptionList.setAttribute('class', 'js-description-item css-description-item');
-			complaintDescriptionList.setAttribute('value', complaintDescriptionArray[i]);
-
-			complaintDescriptionList.innerHTML = `${complaintDescriptionArray[i]}   `;
-
-		}
-	}
-
-	console.log(complaintDescriptionArray);
-	return complaintDescriptionArray;
-
-}	
-
-//function renderComplaintDescriptions(complaintDescriptionArray)
-
-
-
-// function renderComplaintDescriptions(descriptions) {
-
-// 	let descriptionsArray = descriptions;
-
-// 	for (let i = 0; i < descriptionsArray.length; i++) {
-
-// 		let descriptionItem = ;
-// 	}
-
-// }
-
-
-// function create311ComplaintChart() {
-// 	//create chart (with Google D3 API) using 311 data that visualizes the most common complaints for various agencies (NYPD, Sanitation, etc.)
-// }
-
-// function renderNeighborhoodDataSideBar() {
-// 	//create DOM element (sidebar) that includes:
-// 	//Address, 311 complaint chart
-
-// }
-
-
-
 
 function main() {
 	listenForSearchInputThenRunFunctions();
@@ -342,38 +290,4 @@ function main() {
 
 $(main);
 
-/*
-
-//the following code sets the lat long parameters
-
-	//LATITUDE
-
-	let latLngBoundDistance = 0.004491;
-
-	//35414327
-
-	let currentLat = currentAddressInfo.results[0].geometry.location.lat;
-	let currentLng = currentAddressInfo.results[0].geometry.location.lng;
-	console.log("here's the current location lat:");
-	console.log(currentLat);
-
-
-	let northLatBound = currentLat + latLngBoundDistance;
-	let southLatBound = currentLat - latLngBoundDistance;
-
-	let whereLatString = "(latitude between '"+northLatBound+"' and '"+southLatBound+"')";
-
-	//LONGITUDE
-
-	console.log("here's the current location lng:");
-	console.log(currentLng);
-
-	let westLngBound = currentLng - latLngBoundDistance;
-	let eastLngBound = currentLng + latLngBoundDistance;
-
-	
-
-	let whereLngString = "(longitude between '"+westLngBound+"' and '"+eastLngBound+"')";
-
-*/
 

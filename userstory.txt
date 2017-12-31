@@ -43,6 +43,43 @@ FUNCTION STUBS
 
 
 
+Additional code for using latitude and longitude:
+/*
+
+//the following code sets the lat long parameters
+
+	//LATITUDE
+
+	let latLngBoundDistance = 0.004491;
+
+	//35414327
+
+	let currentLat = currentAddressInfo.results[0].geometry.location.lat;
+	let currentLng = currentAddressInfo.results[0].geometry.location.lng;
+	console.log("here's the current location lat:");
+	console.log(currentLat);
+
+
+	let northLatBound = currentLat + latLngBoundDistance;
+	let southLatBound = currentLat - latLngBoundDistance;
+
+	let whereLatString = "(latitude between '"+northLatBound+"' and '"+southLatBound+"')";
+
+	//LONGITUDE
+
+	console.log("here's the current location lng:");
+	console.log(currentLng);
+
+	let westLngBound = currentLng - latLngBoundDistance;
+	let eastLngBound = currentLng + latLngBoundDistance;
+
+	
+
+	let whereLngString = "(longitude between '"+westLngBound+"' and '"+eastLngBound+"')";
+
+*/
+
+
 
 
 NYC OPEN DATA API for 311 Information:
