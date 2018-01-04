@@ -1,23 +1,23 @@
 
-NeighborWho? 
+NeighborWho
 
 User Story and Description
 
-1. Upon landing, users should be prompted by a lightbox with the following text:
+1. Upon landing, users should be prompted by a map and a sidebar with the following text:
 	"New Yorkers!
 	Have you ever wanted to know what your neighbors are up to or what your future neighbors might be like?
 	Here's your chance!
 	Type an address or click a location to learn more about what's going on in the surrounding area!
 
-	(Button) Let's Go!"
+	Have Fun!"
 
 2. User should be able to navigate around a map of New York with a search bar at the top
 
-3. When user clicks on the map (or types an address into the search bar and hits enter or a button that says: "learn about this location") they should see a marker appear and a side bar appear on the right hand side of the viewport with statistics about the neighborhood: 311 Statistics (to be added: crime statistics, traffic accidents, DOB violations)
+3. When user types an address into the search bar and hits enter or a button that says: "learn about this location" they should see a marker appear with a button
 
-4. User should be able to still navigate around the map and pick a new location by clicking or entering a new location, the side bar should reload with data about the new chosen location
+4. Upon clicking the button, a side bar should appear on the right hand side of the viewport with statistics about the neighborhood: 311 Statistics (to be added: crime statistics, traffic accidents, DOB violations)
 
-5. User should be able to click on an information icon to see the start directions lightbox again
+4. User should be able to still navigate around the map and type a new location by entering a new location, a new clickable marker should appear leading the user to a new side bar loaded with data about the new chosen location
 
 
 
