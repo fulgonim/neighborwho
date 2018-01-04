@@ -177,6 +177,9 @@ function nyc311Call(event) {
 			renderComplaintTypes(getComplaintTypes(data), data);
 			toggleDescriptions();
 		},
+		error: function () {
+            alert("We had trouble processing your request, try another residential address");
+        }
 
 	};
 
