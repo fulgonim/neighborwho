@@ -31,6 +31,11 @@ Mobile-First Class
 		width: 100%;
 		height: 300px;
 	}
+
+	h2 {
+		margin-top: 7px;
+	}
+
 }
 
 h1, form {
@@ -47,6 +52,11 @@ form input, form button, h2, p, li {
 	font-family: "Quicksand", sans-serif;
 }
 
+form button {
+	border-radius: 5px;
+	background: linear-gradient(to bottom, #e6e6e6, #f2f2f2);
+}
+
 p, li {
 	font-size: .8em;
 }
@@ -55,17 +65,21 @@ h2 {
 	font-size: 1.5em;
 }
 
+
+
 .css-complaint-button {
 	font-family: "Quicksand", sans-serif;
 	display: block;
-	margin: 3px;
+	margin: 7px;
+	border-radius: 5px;
+	background: linear-gradient(to bottom, #e6e6e6, #f2f2f2);
+
 }
 
 .css-search-bar {
 	margin-left: auto;
 
 }
-
 
 .hidden {
 	display: none;
