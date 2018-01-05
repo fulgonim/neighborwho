@@ -8,12 +8,6 @@ let map;
 
 //initialize google map centered on North Brooklyn
 function initMap() {
-	//this function should initialize Google Maps and fill the "div.js-map-container" or "#map"DOM object with it
-	//start location: lat 40.650002 long -73.949997
-	//include search bar
-	//let bounds = new google.maps.LatLngBounds();
-
-	// temporary starting coordinates for marker
 	let brooklynStart = {
 		lat: 40.650002, lng: -73.949997
 	}
@@ -33,12 +27,8 @@ function initMap() {
         // Bias the SearchBox results towards current map's viewport
         map.addListener('bounds_changed', function() {
           searchBox.setBounds(map.getBounds());
-        });
-    
-    	
-    
+        });    
 }
-
 
 let currentAddressInfo;
 
@@ -88,11 +78,8 @@ function listenForSearchInputThenRunFunctions() {
 		console.log(currentAddress);
 
 		requestLocationDataWithAddress(currentAddress);
-
-		
 	})
 }
-
 
 // request location data using input address then create a new marker 
 function requestLocationDataWithAddress(getAddress) {
@@ -110,9 +97,7 @@ function requestLocationDataWithAddress(getAddress) {
 
 		//create new marker with location info
 		addMarkerWithLocationData(currentAddressInfo.results[0].geometry.location, map, currentAddressInfo);
-
 	});
-
 }
 
 let current311Data = [];
@@ -134,7 +119,6 @@ function nyc311Call(event) {
 	subtract2Months.setMonth(currentDate.getMonth() - 2);
 	console.log("Here is the current date's month minus 2");
 	console.log(subtract2Months.getMonth());
-
 
 	let newDate = currentDate.toISOString().split("T")[0];
 	let refDate = subtract2Months.toISOString().split("T")[0];
@@ -166,7 +150,6 @@ function nyc311Call(event) {
 		data: {
 			"$$app_token": APP_TOKEN,
 			$query: `SELECT * WHERE ${whenString} AND ${zipString} AND agency='NYPD'`
-			
 		},
 
 		type: "GET",
@@ -180,11 +163,8 @@ function nyc311Call(event) {
 		error: function () {
             alert("We had trouble processing your request, try another residential address");
         }
-
 	};
-
 	$.ajax(settings);
-
 }
 
 //loop through the 311 data and pull out all the complaint types and determine how many of each type there are present
@@ -206,7 +186,6 @@ function getComplaintTypes(data) {
 	console.log("complaint object");
 	console.log(complaints);
 	return complaints;
-
 }
 
 //get the specific complaint descriptions using the complaint type
@@ -220,16 +199,15 @@ function getComplaintDescriptions(current311Data, complaint) {
 			complaintDescriptionArray.push(current311Data[i].descriptor);
 		}
 	}
+	console.log("here is the full, unordered description list:")
 	console.log(complaintDescriptionArray);
 
 	complaintDescriptionArray.forEach(function(i) { complaintDescriptionStats[i] = (complaintDescriptionStats[i]||0) + 1;});
-	console.log("here's an object with descriptions and stats:")
+	console.log("here's the description object with descriptions and stats:")
 	console.log(complaintDescriptionStats);
 	
-	//return complaintDescriptionArray;
 	return complaintDescriptionStats;
 }	
-
 
 // loop through the complaints object and create buttons for each to display in the infowindow
 //each button will have hidden list items 
@@ -248,7 +226,6 @@ function renderComplaintTypes(complaints, data) {
 	statSideBar.append(complaintButtonContainer); 
 
 	// loop through complaint list, create buttons and get the associated descriptions and create a list element of them
-
 	let counter = 0;
 
 	for (let complaint in complaints) {
@@ -273,14 +250,11 @@ function renderComplaintTypes(complaints, data) {
 		$(`.complaint-button-${counter}`).text(`${complaint}: ${complaints[complaint]}`);
 		$('.js-complaints-descriptions').append(complaintList);
 
-		//for (let i = 0; i < descriptions.length; i++) {
-
 		for (let description in descriptions) {
 			let descriptionItem = document.createElement("li");
 			descriptionItem.setAttribute("class", `js-description-item description-item-${descriptions[description]} css-description-item`);
 			$(`.complaint-list-${counter}`).append(descriptionItem);
 			$(descriptionItem).text(`${description}: ${descriptions[description]}`);
-
 		}
 		counter++;
 	}
