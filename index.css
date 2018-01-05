@@ -55,6 +55,7 @@ form input, form button, h2, p, li {
 form button {
 	border-radius: 5px;
 	background: linear-gradient(to bottom, #e6e6e6, #f2f2f2);
+	margin-top: 8px;
 }
 
 p {
