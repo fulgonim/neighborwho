@@ -213,15 +213,21 @@ function getComplaintTypes(data) {
 function getComplaintDescriptions(current311Data, complaint) {
 
 	let complaintDescriptionArray = [];
+	let complaintDescriptionStats = {};
 
 	for (let i = 0; i < current311Data.length; i++) {
 		if (current311Data[i].complaint_type === complaint) {
 			complaintDescriptionArray.push(current311Data[i].descriptor);
 		}
 	}
-
 	console.log(complaintDescriptionArray);
-	return complaintDescriptionArray;
+
+	complaintDescriptionArray.forEach(function(i) { complaintDescriptionStats[i] = (complaintDescriptionStats[i]||0) + 1;});
+	console.log("here's an object with descriptions and stats:")
+	console.log(complaintDescriptionStats);
+	
+	//return complaintDescriptionArray;
+	return complaintDescriptionStats;
 }	
 
 
@@ -249,11 +255,11 @@ function renderComplaintTypes(complaints, data) {
 		console.log("here are the complaints and their stats:");
 		console.log(`obj.${complaint} = ${complaints[complaint]}`);	
 
-		//get specific complaint descriptions and store in an array by calling the "getComplaintDescriptions" function
+//*****//get specific complaint descriptions and store in an array by calling the "getComplaintDescriptions" function
 		let descriptions = getComplaintDescriptions(data, complaint);
-		console.log("here are the descriptions:");
+		console.log("here are the descriptions and their stats:");
 		console.log(descriptions);
-
+//*****
 		//create a button (OR ANCHOR ELEMENT?) 
 		let complaintButton = document.createElement("button");
 		complaintButton.setAttribute("class", `js-complaint-button complaint-button-${counter} css-complaint-button`);
@@ -267,11 +273,13 @@ function renderComplaintTypes(complaints, data) {
 		$(`.complaint-button-${counter}`).text(`${complaint}: ${complaints[complaint]}`);
 		$('.js-complaints-descriptions').append(complaintList);
 
-		for (let i = 0; i < descriptions.length; i++) {
+		//for (let i = 0; i < descriptions.length; i++) {
+
+		for (let description in descriptions) {
 			let descriptionItem = document.createElement("li");
-			descriptionItem.setAttribute("class", `js-description-item description-item-${descriptions[i]} css-description-item`);
+			descriptionItem.setAttribute("class", `js-description-item description-item-${descriptions[description]} css-description-item`);
 			$(`.complaint-list-${counter}`).append(descriptionItem);
-			$(descriptionItem).text(`${descriptions[i]}`);
+			$(descriptionItem).text(`${description}: ${descriptions[description]}`);
 
 		}
 		counter++;

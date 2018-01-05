@@ -57,8 +57,12 @@ form button {
 	background: linear-gradient(to bottom, #e6e6e6, #f2f2f2);
 }
 
-p, li {
-	font-size: .8em;
+p {
+	font-size: 1.2em;
+}
+
+li {
+	font-style: italic;
 }
 
 h2 {
@@ -69,11 +73,11 @@ h2 {
 
 .css-complaint-button {
 	font-family: "Quicksand", sans-serif;
+	font-size: 1.4em;
 	display: block;
 	margin: 7px;
 	border-radius: 5px;
 	background: linear-gradient(to bottom, #e6e6e6, #f2f2f2);
-
 }
 
 .css-search-bar {
